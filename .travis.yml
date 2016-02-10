@@ -1,0 +1,43 @@
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.local
+
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    sources:
+    - kalakris-cmake
+    packages:
+    - cmake
+    - lcov
+    - check
+    - pkg-config
+    - doxygen
+
+compiler:
+  - clang
+  - gcc
+
+before_install:
+  # Install libcurl, since Travis doesn't support install libcurl-dev for Linux
+  - mkdir -p $HOME/.local/bin $HOME/.local/include $HOME/.local/lib
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+  - if [[ $TRAVIS_OS_NAME == "osx" ]]; then brew update && brew install check; fi
+  - travis_retry wget https://github.com/bagder/curl/releases/download/curl-7_44_0/curl-7.44.0.tar.gz
+  - tar xvf curl-7.44.0.tar.gz
+  - (cd curl-7.44.0/ && ./configure --prefix=$HOME/.local/ && make && make install)
+  # Install libserialport
+  - travis_retry wget http://sigrok.org/download/source/libserialport/libserialport-0.1.1.tar.gz
+  - tar xvf libserialport-0.1.1.tar.gz
+  - (cd libserialport-0.1.1/ && ./configure --prefix=$HOME/.local/ && make && make install)
+  - gem install coveralls-lcov
+
+script:
+  - mkdir -p build && cd build/
+  - cmake ../
+  - make
