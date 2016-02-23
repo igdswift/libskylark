@@ -3,7 +3,7 @@ if (NOT CHECK_FOUND)
   message(STATUS "Skipping unit tests, Check library not found!")
 else (NOT CHECK_FOUND)
   include_directories(${CHECK_INCLUDE_DIRS})
-  set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} pthread curl skylark)
+  set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} pthread curl serialport skylark)
   # Check needs to be linked against Librt on Linux
   if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(TEST_LIBS ${TEST_LIBS} rt)

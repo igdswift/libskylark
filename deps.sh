@@ -13,7 +13,8 @@ function install_deps_debian () {
          libcurl-dev \
          pkg-config \
          cmake \
-         doxygen
+         doxygen \
+         sigrock
 }
 
 function install_deps_osx () {
@@ -23,6 +24,9 @@ function install_deps_osx () {
         exit 1
     fi
     brew install cmake pkg-config doxygen
+    # Install libserialport
+    brew tap rene-dev/sigrok
+    brew install --HEAD libserialport
 }
 
 function build_lib () {

@@ -17,5 +17,5 @@ else(BUILD_SHARED_LIBS)
 endif(BUILD_SHARED_LIBS)
 
 add_executable(connect "${PROJECT_SOURCE_DIR}/src/connect.c")
-target_link_libraries(connect skylark curl)
+target_link_libraries(connect skylark curl serialport)
 install(TARGETS connect DESTINATION bin)
