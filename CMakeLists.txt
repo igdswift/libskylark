@@ -7,6 +7,7 @@ option(libskylark_tests "Build all of libskylark's tests." ON)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(FindCURL)
+include(FindSerialPort)
 
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_MINSIZEREL "-Os")

@@ -16,6 +16,7 @@ else(BUILD_SHARED_LIBS)
   message(STATUS "Not building shared libraries")
 endif(BUILD_SHARED_LIBS)
 
+find_package(serialport)
 add_executable(connect "${PROJECT_SOURCE_DIR}/src/connect.c")
 target_link_libraries(connect skylark curl serialport)
 install(TARGETS connect DESTINATION bin)
