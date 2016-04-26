@@ -35,6 +35,8 @@ message(STATUS "libskylark version: ${VERSION}")
 # Clang/GCC have slight different flag names.
 if ("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-strict-prototypes -Wno-unknown-warning-option -Werror -std=gnu99 ${CMAKE_C_FLAGS}")
+  include_directories("/usr/local/include")
+  link_directories("/usr/local/lib")
 elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
   set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-strict-prototypes -Werror -std=gnu99 ${CMAKE_C_FLAGS}")
 elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
