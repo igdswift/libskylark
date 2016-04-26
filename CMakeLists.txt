@@ -41,6 +41,11 @@ elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
   message( SEND_ERROR "Unsupported platform: Windows." )
 endif()
 
+if (APPLE)
+  include_directories("/usr/local/include")
+  link_directories("/usr/local/lib")
+endif()
+
 add_subdirectory(src)
 if (libskylark_docs)
   add_subdirectory(docs)
