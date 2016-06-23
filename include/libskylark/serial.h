@@ -42,6 +42,10 @@ int serial_write_nonblocking(struct serial_device_t *serial,
                              const void *buf,
                              size_t count);
 
+int serial_read_blocking(struct serial_device_t *serial,
+                         void *buf, size_t count,
+                         unsigned int timeout_ms);
+
 int serial_read_nonblocking(struct serial_device_t *serial,
                             void *buf, size_t count);
 

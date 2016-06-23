@@ -136,7 +136,6 @@ static int _serial_write(struct serial_device_t *serial,
   }
   int ret;
   if (nonblocking) {
-    log_error("serial_write: nonblocking");
     ret = sp_nonblocking_write(serial->data, buf, count);
   } else {
     ret = sp_blocking_write(serial->data, buf, count, timeout_ms);
@@ -170,9 +169,11 @@ int serial_write_nonblocking(struct serial_device_t *serial,
   return _serial_write(serial, buf, count, 1, 0);
 }
 
-int serial_read_nonblocking(struct serial_device_t *serial,
-                            void *buf,
-                            size_t count)
+static int _serial_read(struct serial_device_t *serial,
+                 void *buf,
+                 size_t count,
+                 int nonblocking,
+                 unsigned int timeout_ms)
 {
   if (!serial) {
     log_error("serial_read_nonblocking: invalid serial port device.");
@@ -183,7 +184,13 @@ int serial_read_nonblocking(struct serial_device_t *serial,
               serial->port);
     return -DEVICE_CONN_ERROR;
   }
-  int ret = sp_nonblocking_read(serial->data, buf, count);
+  int ret;
+  if (nonblocking) {
+    ret = sp_nonblocking_read(serial->data, buf, count);
+  } else {
+    // TODO read or read_next? Bailing early is probably better than waiting.
+    ret = sp_blocking_read_next(serial->data, buf, count, timeout_ms);
+  }
   char *error;
   switch (ret) {
   case SP_ERR_ARG:
@@ -197,4 +204,18 @@ int serial_read_nonblocking(struct serial_device_t *serial,
     return -DEVICE_CONN_ERROR;
   }
   return ret;
+}
+
+int serial_read_blocking(struct serial_device_t *serial,
+                         void *buf,
+                         size_t count,
+                         unsigned int timeout_ms) {
+  return _serial_read(serial, buf, count, 0, timeout_ms);
+}
+
+int serial_read_nonblocking(struct serial_device_t *serial,
+                            void *buf,
+                            size_t count)
+{
+  return _serial_read(serial, buf, count, 1, 0);
 }
