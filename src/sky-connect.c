@@ -19,6 +19,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+void log_(uint8_t priority, const char *format, ...) {
+  default_log(priority, format);
+}
+
 int main(int argc, char **argv)
 {
   start_logging();
