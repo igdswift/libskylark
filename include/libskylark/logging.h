@@ -13,11 +13,15 @@
 #ifndef LIBSKYLARK_LOGGING_H
 #define LIBSKYLARK_LOGGING_H
 
+#include <stdint.h>
 #include <syslog.h>
 
 void start_logging(void);
 
-void log_(int priority, const char *format, ...);
+// Implement this as default_log to allow logging injection.
+extern void log_(uint8_t level, const char *msg, ...) __attribute__ ((weak));
+
+void default_log(uint8_t level, const char *msg, ...);
 
 #define log_debug(args...)   log_(LOG_DEBUG, args)
 

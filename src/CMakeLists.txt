@@ -5,6 +5,7 @@ file(GLOB libskylark_HEADERS "${PROJECT_SOURCE_DIR}/include/libskylark/*.h")
 file(GLOB libskylark_SRCS "${PROJECT_SOURCE_DIR}/src/*.c")
 
 add_library(skylark STATIC ${libskylark_SRCS})
+target_link_libraries(skylark curl serialport)
 install(FILES ${libskylark_HEADERS} DESTINATION include/libskylark)
 install(TARGETS skylark DESTINATION lib)
 

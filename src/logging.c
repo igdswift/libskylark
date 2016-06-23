@@ -20,7 +20,7 @@ void start_logging(void)
   atexit(closelog);
 }
 
-void log_(int priority, const char *format, ...)
+void default_log(uint8_t priority, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
