@@ -58,7 +58,6 @@ int publish(char *uid, void *fd)
   }
   struct curl_slist *chunk = NULL;
   chunk = curl_slist_append(chunk, ENCODING);
-  chunk = curl_slist_append(chunk, ACCEPT_TYPE);
   chunk = curl_slist_append(chunk, CONTENT_TYPE);
   char buf[sizeof(DEFAULT_DEVICE_UID)];
   sprintf(buf, "Device-Uid: %s", uid);
@@ -107,7 +106,9 @@ int subscribe(char *uid, void *fd)
   struct curl_slist *chunk = NULL;
   chunk = curl_slist_append(chunk, ENCODING);
   chunk = curl_slist_append(chunk, ACCEPT_TYPE);
-  chunk = curl_slist_append(chunk, "Pragma: trace");
+#ifdef PROXY
+  chunk = curl_slist_append(chunk, "Pragma: proxy");
+#endif
   char buf[sizeof(DEFAULT_DEVICE_UID)];
   log_info("Subscribing: %s", uid);
   sprintf(buf, "Device-Uid: %s", uid);
