@@ -17,6 +17,8 @@
 // TLS support with self-signed CA
 #define SKIP_PEER_VERIFICATION 1
 #define SKIP_HOST_VERIFICATION 1
+// Support for proxy observations
+#define PROXY                  0
 // For retries and waiting
 #define MAX_RETRY_COUNT        5
 #define PUT_STATUS_OK          200
@@ -26,7 +28,7 @@
 #define ACCEPT_TYPE        "Accept: application/vnd.swiftnav.broker.v1+sbp"
 #define CONTENT_TYPE       "Content-Type: application/vnd.swiftnav.broker.v1+sbp"
 #define DEFAULT_DEVICE_UID "Device-Uid: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-#define BROKER_ENDPOINT    "https://broker.testing.skylark.swiftnav.com"
+#define BROKER_ENDPOINT    "https://broker.staging.skylark.swiftnav.com"
 #define USER_AGENT         "libskylark-agent/1.0"
 
 size_t publish_callback(void *p, size_t size, size_t n, void *up);
