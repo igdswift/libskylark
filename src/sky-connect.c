@@ -54,12 +54,14 @@ int main(int argc, char **argv)
     serial_close(&serial);
     return -DEVICE_CONF_ERROR;
   }
-  setup_broker();
-  if (publish(uid, (void *) &serial) < 0)
+  setup();
+  if (publish(uid, (void *) &serial, &publish_callback) < 0)
   {
+    teardown();
     serial_close(&serial);
     return -CONNECTION_ERROR;
   }
+  teardown();
   serial_close(&serial);
   return NO_ERROR;
 }
