@@ -20,7 +20,7 @@
 
 size_t publish_callback(char *p, size_t size, size_t n, void *up)
 {
-  if (size * n < 1)
+  if (size*n < 1)
   {
     return 0;
   }
@@ -34,10 +34,10 @@ size_t publish_callback(char *p, size_t size, size_t n, void *up)
   return 1;
 }
 
-size_t subscribe_callback(char *ptr, size_t size, size_t n, void *stream)
+size_t subscribe_callback(char *p, size_t size, size_t n, void *up)
 {
-  if (serial_write_nonblocking((struct serial_device_t *)stream,
-                               &ptr, size*n) < 0) {
+  if (serial_write_nonblocking((struct serial_device_t *)up, &p, size*n) < 0) {
+    log_error("subscribe_callback: serial_write_nonblocking");
     return 0;
   }
   return size*n;
@@ -79,12 +79,12 @@ int publish(char *uid, void *fd, callback cb)
   curl_easy_setopt(curl, CURLOPT_READFUNCTION, cb);
   curl_easy_setopt(curl, CURLOPT_READDATA,     fd);
   curl_easy_setopt(curl, CURLOPT_USERAGENT,    USER_AGENT);
-  int http_code = 0;
   int res;
   for (int i = 0; i < MAX_RETRY_COUNT; ++i) {
     // This is actually a blocking put and should be made into a
     // non-blocking PUT.
     res = curl_easy_perform(curl);
+    int http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if (res == CURLE_OK && http_code == PUT_STATUS_OK) {
       curl_easy_cleanup(curl);
