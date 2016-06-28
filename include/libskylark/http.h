@@ -37,9 +37,9 @@ size_t publish_callback(char *p, size_t size, size_t n, void *up);
 
 size_t subscribe_callback(char *p, size_t size, size_t n, void *up);
 
-int publish(char *uid, void *fd, callback cb);
+int publish(const char *uid, void *fd, callback cb);
 
-int subscribe(char *uid, void *fd, callback cb);
+int subscribe(const char *uid, void *fd, callback cb);
 
 void setup(void);
 

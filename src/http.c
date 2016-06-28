@@ -53,7 +53,7 @@ void teardown(void)
   curl_global_cleanup();
 }
 
-int publish(char *uid, void *fd, callback cb)
+int publish(const char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
@@ -98,7 +98,7 @@ int publish(char *uid, void *fd, callback cb)
   return -CONNECTION_ERROR;
 }
 
-int subscribe(char *uid, void *fd, callback cb)
+int subscribe(const char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
