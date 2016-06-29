@@ -74,6 +74,9 @@ int publish(const char *uid, void *fd, callback cb)
   // In the case that the host is using a self-signed CA.
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 #endif
+#ifdef SKIP_HOST_VERIFICATION
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+#endif
   curl_easy_setopt(curl, CURLOPT_URL,          BROKER_ENDPOINT);
   curl_easy_setopt(curl, CURLOPT_PUT,          1);
   curl_easy_setopt(curl, CURLOPT_READFUNCTION, cb);
@@ -121,6 +124,9 @@ int subscribe(const char *uid, void *fd, callback cb)
 #endif
 #ifdef SKIP_PEER_VERIFICATION
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+#endif
+#ifdef SKIP_HOST_VERIFICATION
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 #endif
   curl_easy_setopt(curl, CURLOPT_URL,           BROKER_ENDPOINT);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cb);
