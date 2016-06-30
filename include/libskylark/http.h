@@ -31,14 +31,18 @@
 #define BROKER_ENDPOINT    "https://broker.staging.skylark.swiftnav.com"
 #define USER_AGENT         "libskylark-agent/1.0"
 
-size_t publish_callback(void *p, size_t size, size_t n, void *up);
+typedef size_t (*callback)(char *p, size_t size, size_t n, void *up);
 
-size_t subscribe_callback(void *p, size_t size, size_t n, void *up);
+size_t publish_callback(char *p, size_t size, size_t n, void *up);
 
-void setup_broker(void);
+size_t subscribe_callback(char *p, size_t size, size_t n, void *up);
 
-int publish(char *uid, void *fd);
+int publish(char *uid, void *fd, callback cb);
 
-int subscribe(char *uid, void *fd);
+int subscribe(char *uid, void *fd, callback cb);
+
+void setup(void);
+
+void teardown(void);
 
 #endif /* LIBSKYLARK_HTTP_H */

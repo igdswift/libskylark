@@ -18,9 +18,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-size_t publish_callback(void *p, size_t size, size_t n, void *up)
+size_t publish_callback(char *p, size_t size, size_t n, void *up)
 {
-  if (size * n < 1)
+  if (size*n < 1)
   {
     return 0;
   }
@@ -34,26 +34,30 @@ size_t publish_callback(void *p, size_t size, size_t n, void *up)
   return 1;
 }
 
-size_t subscribe_callback(void *ptr, size_t size, size_t n, void *stream)
+size_t subscribe_callback(char *p, size_t size, size_t n, void *up)
 {
-  if (serial_write_nonblocking((struct serial_device_t *)stream,
-                               &ptr, size*n) < 0) {
+  if (serial_write_nonblocking((struct serial_device_t *)up, &p, size*n) < 0) {
+    log_error("subscribe_callback: serial_write_nonblocking");
     return 0;
   }
   return size*n;
 }
 
-void setup_broker(void)
+void setup(void)
 {
   curl_global_init(CURL_GLOBAL_ALL);
 }
 
-int publish(char *uid, void *fd)
+void teardown(void)
+{
+  curl_global_cleanup();
+}
+
+int publish(char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
   {
-    curl_global_cleanup();
     return -GENERIC_ERROR;
   }
   struct curl_slist *chunk = NULL;
@@ -72,19 +76,18 @@ int publish(char *uid, void *fd)
 #endif
   curl_easy_setopt(curl, CURLOPT_URL,          BROKER_ENDPOINT);
   curl_easy_setopt(curl, CURLOPT_PUT,          1);
-  curl_easy_setopt(curl, CURLOPT_READFUNCTION, publish_callback);
+  curl_easy_setopt(curl, CURLOPT_READFUNCTION, cb);
   curl_easy_setopt(curl, CURLOPT_READDATA,     fd);
   curl_easy_setopt(curl, CURLOPT_USERAGENT,    USER_AGENT);
-  int http_code = 0;
   int res;
   for (int i = 0; i < MAX_RETRY_COUNT; ++i) {
     // This is actually a blocking put and should be made into a
     // non-blocking PUT.
     res = curl_easy_perform(curl);
+    int http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if (res == CURLE_OK && http_code == PUT_STATUS_OK) {
       curl_easy_cleanup(curl);
-      curl_global_cleanup();
       return NO_ERROR;
     } else {
       log_info("publish: retrying!");
@@ -95,12 +98,11 @@ int publish(char *uid, void *fd)
   return -CONNECTION_ERROR;
 }
 
-int subscribe(char *uid, void *fd)
+int subscribe(char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
   {
-    curl_global_cleanup();
     return -GENERIC_ERROR;
   }
   struct curl_slist *chunk = NULL;
@@ -121,7 +123,7 @@ int subscribe(char *uid, void *fd)
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 #endif
   curl_easy_setopt(curl, CURLOPT_URL,           BROKER_ENDPOINT);
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, subscribe_callback);
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cb);
   curl_easy_setopt(curl, CURLOPT_USERAGENT,     USER_AGENT);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA,     fd);
   int res = curl_easy_perform(curl);
@@ -131,6 +133,5 @@ int subscribe(char *uid, void *fd)
     return -CONNECTION_ERROR;
   }
   curl_easy_cleanup(curl);
-  curl_global_cleanup();
   return NO_ERROR;
 }
