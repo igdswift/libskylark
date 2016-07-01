@@ -53,7 +53,7 @@ void teardown(void)
   curl_global_cleanup();
 }
 
-int publish(char *uid, void *fd, callback cb)
+int publish(const char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
@@ -68,7 +68,10 @@ int publish(char *uid, void *fd, callback cb)
   chunk = curl_slist_append(chunk, buf);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER,   chunk);
 #ifdef VERBOSE
-  curl_easy_setopt(curl, CURLOPT_VERBOSE,      1);
+  curl_easy_setopt(curl, CURLOPT_VERBOSE,      1L);
+#endif
+#ifdef SKIP_HOST_VERIFICATION
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 #endif
 #ifdef SKIP_PEER_VERIFICATION
   // In the case that the host is using a self-signed CA.
@@ -98,7 +101,7 @@ int publish(char *uid, void *fd, callback cb)
   return -CONNECTION_ERROR;
 }
 
-int subscribe(char *uid, void *fd, callback cb)
+int subscribe(const char *uid, void *fd, callback cb)
 {
   CURL *curl = curl_easy_init();
   if (!curl)
@@ -117,7 +120,10 @@ int subscribe(char *uid, void *fd, callback cb)
   chunk = curl_slist_append(chunk, buf);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER,   chunk);
 #ifdef VERBOSE
-  curl_easy_setopt(curl, CURLOPT_VERBOSE,      1);
+  curl_easy_setopt(curl, CURLOPT_VERBOSE,      1L);
+#endif
+#ifdef SKIP_HOST_VERIFICATION
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 #endif
 #ifdef SKIP_PEER_VERIFICATION
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);

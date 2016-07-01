@@ -13,12 +13,11 @@
 #ifndef LIBSKYLARK_HTTP_H
 #define LIBSKYLARK_HTTP_H
 
-#define VERBOSE                0
 // TLS support with self-signed CA
 #define SKIP_PEER_VERIFICATION 1
 #define SKIP_HOST_VERIFICATION 1
 // Support for proxy observations
-#define PROXY                  0
+#define PROXY                  1
 // For retries and waiting
 #define MAX_RETRY_COUNT        5
 #define PUT_STATUS_OK          200
