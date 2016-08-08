@@ -189,7 +189,7 @@ static int _serial_read(struct serial_device_t *serial,
     ret = sp_nonblocking_read(serial->data, buf, count);
   } else {
     // TODO read or read_next? Bailing early is probably better than waiting.
-    ret = sp_blocking_read_next(serial->data, buf, count, timeout_ms);
+    ret = sp_blocking_read(serial->data, buf, count, timeout_ms);
   }
   char *error;
   switch (ret) {

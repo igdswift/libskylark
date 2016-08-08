@@ -27,7 +27,7 @@
 #define ACCEPT_TYPE        "Accept: application/vnd.swiftnav.broker.v1+sbp"
 #define CONTENT_TYPE       "Content-Type: application/vnd.swiftnav.broker.v1+sbp"
 #define DEFAULT_DEVICE_UID "Device-Uid: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-#define BROKER_ENDPOINT    "https://broker.staging.skylark.swiftnav.com"
+#define BROKER_ENDPOINT    "http://broker.staging.skylark.swiftnav.com"
 #define USER_AGENT         "libskylark-agent/1.0"
 
 typedef size_t (*callback)(char *p, size_t size, size_t n, void *up);

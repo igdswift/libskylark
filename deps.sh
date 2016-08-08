@@ -6,7 +6,6 @@ function install_deps_debian () {
     # Sudo'd version of travis installation instructions
     sudo apt-get update -qq
     sudo apt-get install python-software-properties
-    sudo add-apt-repository --yes ppa:kalakris/cmake
     sudo apt-get update -qq
     sudo apt-get -y install cmake \
          build-essential \
@@ -14,7 +13,7 @@ function install_deps_debian () {
          pkg-config \
          cmake \
          doxygen \
-         sigrock
+         sigrok
 }
 
 function install_deps_osx () {
